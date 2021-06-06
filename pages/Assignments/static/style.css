@@ -20,7 +20,8 @@ body{
   width:60%;
 }
 .subject{
-  font-size: 20px;
+  
+  font-weight: bold !important;
 }
 .taketest a::after{
   content: '\00bb';

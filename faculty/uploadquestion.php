@@ -46,7 +46,7 @@ session_start();
     foreach($student_result as $row)
     {
         $sid=$row['s_id'];
-        $studentAssign="INSERT INTO `student_assign`(`s_id`, `as_id`, `is_answerd`, `score`) VALUES ('$sid','$assign_id','1','0')";
+        $studentAssign="INSERT INTO `student_assign`(`s_id`, `as_id`, `is_answerd`, `score`) VALUES ('$sid','$assign_id','0','0')";
         mysqli_query($conn,$studentAssign);
     }
 

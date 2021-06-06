@@ -66,7 +66,7 @@ else {
     <div class="mobile_nav_items">
       <a href="faculty_index.php" onclick="makeActive(this)" class="active"><i class="fa fa-tachometer"></i><span>Dashboard</span></a>
       <a href="faculty_profile.php" onclick="makeActive(this)" class="active-link"><i class="fa fa-user"></i><span>Profile</span></a>
-      <a href="pages/Assignments/assignment.html" onclick="makeActive(this)" class="active"><i class="fa fa-book"></i><span>Create Assignment</span></a>
+      <a href="faculty_assign.php" onclick="makeActive(this)" class="active"><i class="fa fa-book"></i><span>Create Assignment</span></a>
       <a href="faculty_upload.php" onclick="makeActive(this)" class="active"><i class="fa fa-folder"></i><span>Upload Content</span></a>
       <a href="../webteam.html" onclick="makeActive(this)" class="active"><i class="fa fa-users"></i><span>Webteam</span></a>
     </div>
@@ -80,7 +80,7 @@ else {
     </div>
     <a href="faculty_index.php" onclick="makeActive(this)" class="active"><i class="fa fa-tachometer"></i><span>Dashboard</span></a>
     <a href="faculty_profile.php" onclick="makeActive(this)" class="active-link"><i class="fa fa-user"></i><span>Profile</span></a>
-    <a href="pages/Assignments/assignment.html" onclick="makeActive(this)" class="active"><i class="fa fa-book"></i><span>Create Assignment</span></a>
+    <a href="faculty_assign.php" onclick="makeActive(this)" class="active"><i class="fa fa-book"></i><span>Create Assignment</span></a>
     <a href="faculty_upload.php" onclick="makeActive(this)" class="active"><i class="fa fa-folder"></i><span>Upload Content</span></a>
     <a href="../webteam.html" onclick="makeActive(this)" class="active"><i class="fa fa-users"></i><span>Webteam</span></a>
   </div>

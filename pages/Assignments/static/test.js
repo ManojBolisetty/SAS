@@ -1,3 +1,30 @@
+questions=[];
+var ajax=new XMLHttpRequest();
+var method='GET';
+var url='data.php';
+var asynchronus=true;
+ajax.open(method,url,asynchronus);
+ajax.send();
+ajax.onreadystatechange=function()
+{
+    if(this.readyState==4 && this.status==200)
+    {
+        var data=JSON.parse(this.responseText);
+          
+        for(let i=0;i<data.length;i++)
+        {
+            console.log(data[i]);
+            createQuestions(
+            {question_no:(i+1),
+            question:data[i].question,
+            options:[data[i].option1, data[i].option2, data[i].option3, data[i].option4],
+            key:data[i].answer
+            }
+            );
+        }
+    }
+}
+
 
 //document on ready
 $(document).ready(function(){
@@ -59,8 +86,9 @@ const isModalVisible = (id)=>{
 
 
 
+
 //assignment questions
-questions =[
+/*questions =[
     {
         "question_no": 1,
         "question": "The minimum velocity that has to be achieved by an object, to escape the gravitational sphere of influence of the celestial body is known as ",
@@ -235,7 +263,7 @@ questions =[
         ],
         "key": "0xBEEF"
         }
-]
+]*/
 
 //global things
 var appe=document.getElementById("test");
@@ -261,17 +289,19 @@ function openFullscreen() {
 
  
 //questions set
-for(let i=0;i<questions.length;i++){
-
+let i=0;
+function createQuestions(questionOb){
+    questions.push(questionOb);
+    console.log(questionOb);
     var div = document.createElement("div");
     div.setAttribute("class","card bg-dark p-4 mx-5 h4 question"+i);
     var opdiv=document.createElement("div");
     opdiv.setAttribute("class","d-flex flex-column p-5 h5")
 
-    var ques=document.createTextNode(questions[i].question);
-    var no=document.createTextNode(questions[i].question_no+" . ");
+    var ques=document.createTextNode(questionOb.question);
+    var no=document.createTextNode(questionOb.question_no+" . ");
     
-    for(let j=0;j<questions[i].options.length;j++)
+    for(let j=0;j<questionOb.options.length;j++)
     {
         var divop=document.createElement("div");
         divop.setAttribute("class"," p-2 mx-5")
@@ -279,9 +309,9 @@ for(let i=0;i<questions.length;i++){
         rad.setAttribute("class","form-check-input op"+i);
         rad.setAttribute("type","radio");
         rad.setAttribute("name","question"+i);
-        rad.setAttribute("value",questions[i].options[j]);
-        rad.setAttribute("id",questions[i].options[j]);
-        var ops=document.createTextNode(questions[i].options[j]);
+        rad.setAttribute("value",questionOb.options[j]);
+        rad.setAttribute("id",questionOb.options[j]);
+        var ops=document.createTextNode(questionOb.options[j]);
         divop.appendChild(rad);
         divop.appendChild(ops);
     
@@ -291,6 +321,7 @@ for(let i=0;i<questions.length;i++){
     div.appendChild(ques);
     div.appendChild(opdiv);
     appe.appendChild(div);
+    i++;
 }
 
 //user mistake

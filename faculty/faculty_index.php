@@ -18,7 +18,7 @@ if(isset($_SESSION['f_id']))
 else {
   header("Location: ../faculty_login.php");
 }
- ?>
+?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -36,11 +36,41 @@ else {
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" charset="utf-8"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.24/css/dataTables.bootstrap4.min.css">
     <!-- custom css -->
     <link rel="stylesheet" href="../css/sidenav.css"/>
     <link rel="stylesheet" href="../css/style.css"/>
   </head>
   <body>
+<div class="modal fade" id="viewData" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">See Student Data</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form action='session_assignment.php' method='POST'>
+        <div class="modal-body">
+
+            <div class="form-group">
+                <input type='hidden' name='asid' id='asid' class='form-control' placeholder='Enter First Name'>
+                <input type='hidden' name='asname' id='asname' class='form-control' placeholder='Enter First Name'>
+            </div>
+            <div class="form-group">
+              <h4 class='text-center'>Do You want to see the details of <br> <p style='color: green;' class='text-center asname' id=''></p></h4>
+            </div>
+
+            
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+            <button type="submit" name="yes" class="btn btn-primary">Yes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
 
   <input type="checkbox" id="check">
   <!--header area start-->
@@ -85,104 +115,124 @@ else {
     <a href="../webteam.html" onclick="makeActive(this)" class="active"><i class="fa fa-users"></i><span>Webteam</span></a>
   </div>
   <!--sidebar end-->
-
   <div class="content">
-    <div class="container-fluid">
+    <div class="container">
       <div class="row">
-        <div class="col-md-6 col-sm-12">
-          <div class="container-fluid assignment-completion-details shadow">
-            <div class="row">
-              <div class="col-12 assignment-summary">
-                <h3>Assignments summary <i class="fa fa-tasks"></i></h3>
-                <div class="tcp-details">
-                  <p class="total-assignments border-bottom">Total: <span class="total">10</span>  </p>
-                  <span>
-                    <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50"
-                        aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                        <span class="c-percentage">50% Complete</span>
-                    </div>
-                  </span>
-                  <p class="completed-assignments border-bottom">Completed: <span class="completed">5</span></p>
-                  <span>
-                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50"
-                      aria-valuemin="0" aria-valuemax="100" style="width:50%">
-                        <span class="p-percentage">50% Pending</span>
-                    </div>
-                  </span>
-                  <p class="pending-assignments border-bottom">Pending: <span class="pending">5</span>  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-          <div class="col-12 col-md-6">
-            <div class="container-fluid pt-1">
-              <div class="row border bg-white rounded p-1 shadow" >
-                <div class="col-12 overflow-auto px-2" style="height:235px;">
-                  <h3 class="notifications-heading p-2 mt-1"><b>Notifications</b>
-                  <i class="fa fa-bell"></i></h3>
-                  <div class="d-flex border-bottom py-1 border-dotted">
-                       <div class="p px-2">
-                          <a href="#" class='noteLink'>notification1</a>
-                       </div>
-
-                  </div>
-                  <div class="d-flex border-bottom py-1 border-dotted">
-                       <div class="p px-2">
-                          <a href="#" class='noteLink'>notification2</a>
-                       </div>
-                  </div>
-                </div>
-                </div>
-              </div>
-            </div>
-      </div>
-
-           <div class="row shadow mt-3">
-             <div class="col-12 pt-2">
-               <h3><b>Results</b></h3>
-               <div class="table-responsive">
-               <table class="table table-sm">
-                  <thead class="thead-dark">
-                   <tr>
-                     <th scope="col">S.No</th>
-                     <th scope="col">Assignment No</th>
-                     <th scope="col">Subject1</th>
-                     <th scope="col">Subject2</th>
-                     <th scope="col">Subject3</th>
-                     <th scope="col">Subject4</th>
-                     <th scope="col">Subject5</th>
-                     <th scope="col">Subject6</th>
-                   </tr>
+        <div class="col-12 shadow">
+          <?php 
+            $faculty_assignments="SELECT * FROM assignment where fac_id='$id'";
+            $assign_result=mysqli_query($conn,$faculty_assignments);
+          ?>
+          <h4 class="text-center mt-3">
+            No of Assignments Created :<span class='ml-3'><?php echo mysqli_num_rows($assign_result)?></span>
+          </h4>
+          <div class="card mb-5 mt-5">
+            <div class="card-body h-100 overflow-auto">
+              <table class="table  table-hover" id='assignment_data'>
+                  <thead class='table-dark'>
+                    <tr>
+                      <th scope='col'>Assignment Id</th>
+                      <th scope='col'>Assignment Name</th>
+                      <th scope='col'>No of students Attempted</th>
+                      <th scope='col'>View</th>
+                    </tr>
                   </thead>
-                  <tbody>
-                   <tr>
-                     <th scope="row">1</th>
-                     <td>1</td>
-                     <td>8</td>
-                     <td>9</td>
-                     <td>10</td>
-                     <td>7</td>
-                     <td>9</td>
-                     <td>6</td>
-                   </tr>
-                   <tr>
-                     <th scope="row">2</th>
-                     <td>1</td>
-                     <td>8</td>
-                     <td>9</td>
-                     <td>10</td>
-                     <td>7</td>
-                     <td>9</td>
-                     <td>6</td>
-                   </tr>
+                  <tbody class='table-secondary'>
+                    <?php 
+                      foreach($assign_result as $row)
+                      {
+                        $aid=$row['as_id'];
+                        $noof="SELECT * from student_assign where as_id='$aid' and is_answerd=1";
+                        $no_of_students=mysqli_query($conn,$noof);
+                        ?>
+                        <tr class=''><td> <?php echo $row['as_id']?></td>
+                        <td><?php echo $row['as_name']?></td>
+                        <td><?php echo mysqli_num_rows($no_of_students);?></td>
+                        <td><button class='btn btn-primary viewbtn'>View</button></td></tr>
+
+                    <?php  
+                      }
+                    
+                    ?>
                   </tbody>
-                </table>
-              </div>
-              </div>
+              </table>
+            </div>
           </div>
+
+        </div>
+        <?php
+          if(isset($_SESSION['asid']))
+          {
+            $aid=$_SESSION['asid'];
+            unset($_SESSION['asid']);
+            $noof="SELECT * from student_assign where as_id='$aid' and is_answerd=1";
+            $no_of_students=mysqli_query($conn,$noof);
+            
+            
+            ?>
+            <div class="col-12 mt-5 shadow">
+              
+              <h5 class='attempt text-center mt-2'> No of Students Attempted: <?php echo mysqli_num_rows($no_of_students);?></h5>
+              <p style='font-weight:bold;'>Assignment Name: <?php echo $_SESSION['asname']?></p>
+              <p style='font-weight:bold;'>Assignment Id:<?php echo $aid?></p>
+               <div class="card mt-4 mb-2">
+               <div class="card-body">
+                  <table class='table table-dark table-hover mt-5 mb-3'>
+                    <thead>
+                      <th scope='col'>Student Id</th>
+                      <th scope='col'>Student Name</th>
+                      <th scope='col'>Class</th>
+                      <th scope='col'>Student Score</th>
+                      <th scope='col'>Attempted</th>
+                    </thead>
+                    <tbody>
+                      <?php
+                        $noof="SELECT * from student_assign where as_id='$aid'";
+                        $no_of_students=mysqli_query($conn,$noof);
+                        foreach($no_of_students as $row)
+                        {
+                          $sid=$row['s_id'];
+                          $sdetails="SELECT * FROM STUDENTS WHERE s_id='$sid'";
+                          $run=mysqli_fetch_assoc(mysqli_query($conn,$sdetails));?>
+                          <tr>
+                            <td><?php echo $sid?></td>
+                            <td><?php echo $run['s_name']?></td>
+                            <td><?php echo $run['s_class']?></td>
+                            <td><?php echo $row['score']?></td>
+                            <td>
+                              <?php 
+                                if($row['is_answerd']==1)
+                                {
+                                  echo 'Yes';
+                                }
+                                else{
+                                  echo 'No';
+                                }?>
+                            </td>
+                          </tr>
+
+                      <?php  }
+                      
+                      ?>
+                    </tbody>
+                  </table>
+
+               </div>
+                   
+                
+                  
+                
+               </div>
+           
+            </div>
+
+        <?php    
+          }
+        ?>
+        
       </div>
+    </div>
+  
   </div>
 
   <script type="text/javascript">
@@ -202,6 +252,38 @@ else {
       a.className = 'active-link';
     }
   </script>
+  
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-gtEjrD/SeCtmISkJkNUaaKMoLD0//ElJ19smozuHV6z3Iehds+3Ulb9Bn9Plx0x4" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/js/bootstrap.min.js" integrity="sha384-Atwg2Pkwv9vp0ygtn1JAojH0nYbwNJLPhwyoVbhoPwBhjQPR5VtM2+xf0Uwh9KtT" crossorigin="anonymous"></script>    
+    <script src='https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js'></script>
+    <script src='https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js'></script>
+    <script>	
+        $(document).ready(function() {
+            $('.table').DataTable();
+        } );
+    </script>
+    <script>
+        $(document).ready(function(){
+
+            $('.viewbtn').on('click', function()
+            {
+                $('#viewData').modal('show');
+                $tr=$(this).closest('tr');
+                var data=$tr.children('td').map(function(){
+                    return $(this).text();
+                }).get();
+                $('#asid').val(data[0]);
+                $('.asname').text(data[1]);
+                $('#asname').val(data[1]);
+                
+
+            });
+
+
+        });
+    </script>
 
 </body>
 
